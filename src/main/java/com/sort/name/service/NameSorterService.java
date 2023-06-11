@@ -18,20 +18,42 @@ public class NameSorterService {
 
     @Value("${output.file.name}")
     private String outputFile;
+
     public List<Name> nameSorter() {
-        String line;
         List<Name> nameList = new ArrayList<>();
+        fetchUnsortedNames(nameList, inputFile);
+        Collections.sort(nameList, Comparator.comparing(Name::getLastName).thenComparing(Name::getGivenName));
+        writeSortedNames(nameList, outputFile);
+        printSortedNames(nameList);
+        return nameList;
+    }
 
+    public BufferedReader fetchBufferedReader(String inputFile) throws FileNotFoundException {
+        FileReader fileReader = new FileReader(inputFile);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        return bufferedReader;
+    }
+
+    public BufferedWriter fetchBufferedWriter(String outputFile) throws IOException {
+        FileWriter fileWriter = new FileWriter(outputFile);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        return bufferedWriter;
+    }
+
+    public void buildNameList(List<Name> nameList, BufferedReader bufferedReader) throws IOException {
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            Name name = new Name();
+            name.setLastName(line.substring(line.lastIndexOf(" ") + 1));
+            name.setGivenName(line);
+            nameList.add(name);
+        }
+    }
+
+    public void fetchUnsortedNames(List<Name> nameList, String inputFile){
         try {
-            FileReader fileReader = new FileReader(inputFile);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while ((line = bufferedReader.readLine()) != null) {
-                Name name = new Name();
-                name.setLastName(line.substring(line.lastIndexOf(" ") + 1));
-                name.setGivenName(line);
-                nameList.add(name);
-            }
+            BufferedReader bufferedReader = fetchBufferedReader(inputFile);
+            buildNameList(nameList, bufferedReader);
             bufferedReader.close();
         } catch (
                 FileNotFoundException ex) {
@@ -39,14 +61,13 @@ public class NameSorterService {
         } catch (
                 IOException ex) {
             System.out.println("Error reading file '" + inputFile + "'");
+
         }
+    }
 
-        Collections.sort(nameList, Comparator.comparing(Name::getLastName).thenComparing(Name::getGivenName));
-
+    public void writeSortedNames(List<Name> nameList, String outputFile){
         try {
-            FileWriter fileWriter = new FileWriter(outputFile);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
+            BufferedWriter bufferedWriter = fetchBufferedWriter(outputFile);
             for (Name item : nameList) {
                 bufferedWriter.write(item.getGivenName());
                 bufferedWriter.newLine();
@@ -56,11 +77,11 @@ public class NameSorterService {
         } catch (IOException ex) {
             System.out.println("Error writing to file '" + outputFile + "'");
         }
+    }
 
+    public void printSortedNames(List<Name> nameList){
         for (Name item : nameList) {
             System.out.println(item.getGivenName());
         }
-        return nameList;
     }
 }
-
