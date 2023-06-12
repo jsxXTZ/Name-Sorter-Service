@@ -1,6 +1,6 @@
 # Name-Sorter-Service
 
-The Goal: Name Sorter
+**The Goal: Name Sorter**
 Build a name sorter. Given a set of names, order that set first by last name, then by any given names the person may have. A name must have at least 1 given name
 and may have up to 3 given names.
 
@@ -15,13 +15,13 @@ NameSorterService - is a service class which reads unsorted names from input fil
 
 AppProperties - read properties from application.properties file.
 
-TESTs  
+**TESTs**  
 various test classes are available under tests folder.
 
-Deployment 
+**Deployment** 
 Name-Sorter-Service is deployed on local Jenkins running on port 8080.
 
-Installation
+**Installation**
 * JDK, For installation - https://www.oracle.com/java/technologies/downloads/  
 * maven
 * SpringBoot 3.1.0
