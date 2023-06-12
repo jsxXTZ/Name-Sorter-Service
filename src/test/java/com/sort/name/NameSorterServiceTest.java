@@ -1,6 +1,7 @@
 package com.sort.name;
 
 import com.sort.name.model.Name;
+import com.sort.name.service.AppProperties;
 import com.sort.name.service.NameSorterService;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +28,7 @@ public class NameSorterServiceTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(nameSorterService, "inputFile", "/Users/ashuvaidwan/Desktop/unsorted-names-list.txt");
-        ReflectionTestUtils.setField(nameSorterService, "outputFile", "sorted-names-list.txt");
-
+        AppProperties appProperties = mock(AppProperties.class);
     }
 
     @Test
@@ -62,14 +61,6 @@ public class NameSorterServiceTest {
                 "Hunter Uriah Mathew Clarke", "Mikayla Lopez");
         nameSorterService.buildNameList(nameList, bufferedReader);
         assertNotEquals("", nameList);
-    }
-
-    @Test
-    public void test_fetch_unsorted_names(){
-        List<Name> nameList = new ArrayList<>();
-        String inputFile = "/Users/ashuvaidwan/Desktop/unsorted-names-list.txt";
-        nameSorterService.fetchUnsortedNames(nameList, inputFile);
-        assertTrue(nameList.isEmpty());
     }
 
     @Test

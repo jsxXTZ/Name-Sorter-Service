@@ -1,6 +1,7 @@
 package com.sort.name.service;
 
 import com.sort.name.model.Name;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +14,14 @@ import java.util.List;
 @Service
 public class NameSorterService {
 
-    @Value("${input.file.name}")
-    private String inputFile;
-
-    @Value("${output.file.name}")
-    private String outputFile;
+    @Autowired
+    AppProperties appProperties;
 
     public List<Name> nameSorter() {
         List<Name> nameList = new ArrayList<>();
-        fetchUnsortedNames(nameList, inputFile);
+        fetchUnsortedNames(nameList, appProperties.getInputFile());
         Collections.sort(nameList, Comparator.comparing(Name::getLastName).thenComparing(Name::getGivenName));
-        writeSortedNames(nameList, outputFile);
+        writeSortedNames(nameList, appProperties.getOutputFile());
         printSortedNames(nameList);
         return nameList;
     }
